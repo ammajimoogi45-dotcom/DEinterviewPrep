@@ -11,7 +11,6 @@ from pyspark.sql.functions import *
 
 # DBTITLE 1,create a dataframe
 
-
 schema = StructType([
     StructField('id',IntegerType(),True),
     StructField('Name',StringType(),True),
