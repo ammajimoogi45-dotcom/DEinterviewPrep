@@ -468,3 +468,19 @@ spark.write.format('parquet').mode('overwrite').save('filepath')
 #selecting base on column is easy
 #schema is stored in metadata
 #merge,update,delete won't support
+
+
+# COMMAND ----------
+
+# DBTITLE 1,single parquet file creation
+import pandas as pd
+parquetdf=pd.read_excel('/Volumes/learning/default/filesystem/Department.xlsx')
+sparkParquetdf= spark.createDataFrame(parquetdf)
+parquetfile="/Volumes/learning/default/filesystem/Department.parquet"
+temp=parquetfile +"_temp"
+sparkParquetdf.coalesce(1).write.format('parquet').mode('overwrite').save(temp)
+print(temp)
+
+parquet= [i for i in dbutils.fs.ls(temp) if i.name.endswith('parquet')]
+dbutils.fs.cp(parquet[0].path,parquetfile)
+dbutils.fs.rm(temp, recurse=True)
